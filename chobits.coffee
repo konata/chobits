@@ -38,7 +38,7 @@ list = (list) ->
   (list.__list__ = true) and list
 
 Native =
-  trace: (names...)-> console.log("%j", names)
+  trace: (names...)-> console.log(names)
   concat: (str, str2)-> str + str2
   '>': (a, b)-> a > b
   '<': (a, b)-> a < b
@@ -46,6 +46,7 @@ Native =
   '-': (a, b)-> a - b
   '*': (a, b)-> a * b
   '/': (a, b)-> a / b
+  'eq': (a, b) -> a is b
   'def': sp((name, value) -> @[name] = apply(value, @))
   'do': sp((args...) -> args.map(((piece)-> apply(piece, @)).bind(@)))
   'if': sp((cond, succ, fail) -> apply((if apply(cond, @) then succ else fail), @))
@@ -169,6 +170,16 @@ source = """
     (if (< x 1) 1 (* x (fact (- x 1))))))
   (trace (fact 10))
 
+  ;; hanoi
+  (def hanoi (lambda (remain left middle right)
+    (if (eq remain 1)
+      (trace left "->" right)
+      (do
+        (hanoi (- remain 1) left right middle)
+        (trace left "->" right)
+        (hanoi (- remain 1) middle left right)
+      ))))
+  (hanoi 3 "left" "middle" "right")
 )
 """
 
