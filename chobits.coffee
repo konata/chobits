@@ -44,6 +44,8 @@ Native =
   '<': (a, b)-> a < b
   '+': (a, b)-> a + b
   '-': (a, b)-> a - b
+  '*': (a, b)-> a * b
+  '/': (a, b)-> a / b
   'def': sp((name, value) -> @[name] = apply(value, @))
   'do': sp((args...) -> args.map(((piece)-> apply(piece, @)).bind(@)))
   'if': sp((cond, succ, fail) -> apply((if apply(cond, @) then succ else fail), @))
@@ -65,14 +67,17 @@ TOKENS =
   LEFT_BRACKET: /^\(/
   RIGHT_BRACKET: /^\)/
   STRING: /^".*?"/
+  COMMENT: /^;.*\D/
   NUMBER: /^\d+(\.\d+)?/
-  SYMBOL: /^[a-zA-z_><=\+\-][a-zA-Z_\d\?-]*/
+  SYMBOL: /^[a-zA-z_><=\+\-\*\/][a-zA-Z_\d\?-]*/
 
 parse = (source, parent, ast)->
   until  source.length is 0
     switch
       when source.match(TOKENS.SPACE)
         [_,source] = source.extract(TOKENS.SPACE)
+      when source.match(TOKENS.COMMENT)
+        [_,source] = source.extract(TOKENS.COMMENT)
       when source.match(TOKENS.LEFT_BRACKET)
         [_,source] = source.extract(TOKENS.LEFT_BRACKET)
         scope = []
@@ -126,15 +131,16 @@ run = (code) ->
 
 source = """
 (do
+  ;; normal function defination
   (def max
 		(lambda (x y) 
 			(if (> x y) x y)
 			))
-
   (trace
 		(max 100 200)
 		)
 
+  ;; list operations
   (def cddr
     (lambda (list)
       (cdr (cdr list))
@@ -157,9 +163,14 @@ source = """
   (trace names)
   (trace (cddddr names))
   (trace (cdar names))
+
+  ;; recursive function defination
+  (def fact (lambda (x)
+    (if (< x 1) 1 (* x (fact (- x 1))))))
+  (trace (fact 10))
+
 )
 """
-
 
 symbols = tokenize(source)
 run(symbols)
