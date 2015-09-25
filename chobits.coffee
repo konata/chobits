@@ -24,6 +24,10 @@ isBoolean = (bool)->
 isQuoted = (str) ->
   typeof str is 'string' and str[0] is '"' and str[str.length - 1] is '"'
 
+isList = (lst)->
+  isArray(lst) and lst.__list__
+
+
 extend = (name) ->
   Object.create(name)
 
@@ -34,7 +38,7 @@ list = (list) ->
   (list.__list__ = true) and list
 
 Native =
-  trace: (names...)-> console.log("%j",names)
+  trace: (names...)-> console.log("%j", names)
   concat: (str, str2)-> str + str2
   '>': (a, b)-> a > b
   '<': (a, b)-> a < b
@@ -101,10 +105,10 @@ apply = (expression, scope)->
   switch
     when expression is 'nil' then list([])
     when isNumber(expression) then expression
-    when isQuoted(expression) then expression.replace(/^.\|.$/g, '')
+    when isList(expression) then expression
     when isBoolean(expression) then expression
+    when isQuoted(expression) then expression.replace(/^.\|.$/g, '')
     when isString(expression) then scope[expression]
-    when isArray(expression) and expression.__list__ then expression
     when isArray(expression)
       [fn,args...] = expression
       fn = if isString(fn) then scope[fn] else fn
@@ -122,11 +126,10 @@ run = (code) ->
 
 source = """
 (do
-	(def max 
+  (def max
 		(lambda (x y) 
 			(if (> x y) x y)
-			)
-	)
+			))
 
   (trace
 		(max 100 200)
