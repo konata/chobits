@@ -1,0 +1,60 @@
+(do
+  ;; normal function defination
+  (def max
+    (lambda (x y)
+      (if (> x y) x y)
+    ))
+  (trace
+    (max 100 200))
+
+  ;; list operations
+  (def cddr
+    (lambda (list)
+      (cdr (cdr list))
+    )
+  )
+
+  (def cdddr
+    (lambda (list)
+      (cdr (cddr list))))
+
+  (def cddddr
+    (lambda (list)
+      (cdr (cdddr list))))
+
+  (def cdar
+    (lambda (list)
+      (car (cdr list))))
+
+  (def names (cons 100 (cons 200 (cons 300 (cons 400 nil)))))
+  (trace names)
+  (trace (cddddr names))
+  (trace (cdar names))
+
+  ;; recursive function defination
+  (def fact (lambda (x)
+    (if (< x 1) 1 (* x (fact (- x 1))))))
+  (trace (fact 10))
+
+  ;; hanoi
+  (def hanoi (lambda (remain left middle right)
+    (if (eq remain 1)
+      (trace left "->" right)
+      (do
+        (hanoi (- remain 1) left right middle)
+        (trace left "->" right)
+        (hanoi (- remain 1) middle left right)
+      ))))
+  (hanoi 10 "left" "middle" "right")
+
+  ;; core functions
+  (cond
+    ((> 1 1) (trace "failed!"))
+    ((> 1 2) (trace "failed!"))
+    ((> 2 1) (trace "success!"))
+  )
+
+
+
+
+)
