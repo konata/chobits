@@ -27,10 +27,6 @@ isQuoted = (str) ->
 isList = (lst)->
   isArray(lst) and lst.__list__
 
-
-extend = (name) ->
-  Object.create(name)
-
 sp = (fn) ->
   (fn.__sp__ = true) and fn
 
@@ -62,6 +58,7 @@ Native =
   'cdr': (list)->
     [_,tail] = list
     tail
+
 
 TOKENS =
   SPACE: /^[\s\n\r]+/
@@ -134,12 +131,11 @@ source = """
 (do
   ;; normal function defination
   (def max
-		(lambda (x y) 
-			(if (> x y) x y)
-			))
+    (lambda (x y)
+      (if (> x y) x y)
+    ))
   (trace
-		(max 100 200)
-		)
+    (max 100 200))
 
   ;; list operations
   (def cddr
@@ -179,12 +175,11 @@ source = """
         (trace left "->" right)
         (hanoi (- remain 1) middle left right)
       ))))
-  (hanoi 3 "left" "middle" "right")
+  (hanoi 15 "left" "middle" "right")
 )
 """
 
 symbols = tokenize(source)
 run(symbols)
-
 
 
