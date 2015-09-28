@@ -18,6 +18,9 @@ isQuoted = (str) ->
 isList = (lst)->
   isArray(lst) and lst.__list__
 
+isFunction =(fn)->
+  typeof fn is "function"
+
 sp = (fn) ->
   (fn.__sp__ = true) and fn
 
@@ -25,7 +28,7 @@ list = (list) ->
   (list.__list__ = true) and list
 
 Native =
-  trace: (names...)-> console.log(names)
+  trace: (names...)-> console.log("%j",names)
   concat: (str, str2)-> str + str2
   '>': (a, b)-> a > b
   '<': (a, b)-> a < b
@@ -63,15 +66,17 @@ apply = (expression, scope)->
     when isNumber(expression) then expression
     when isList(expression) then expression
     when isBoolean(expression) then expression
+    when isFunction(expression) then expression
     when isQuoted(expression) then expression.replace(/^.\|.$/g, '')
     when isString(expression) then scope[expression]
     when isArray(expression)
       [fn,args...] = expression
-      fn = if isString(fn) then scope[fn] else fn
+      fn = if isString(fn) then scope[fn] else (if isArray(fn) then apply(fn,scope) else fn)
       args = if fn.__sp__ then args else args.map((piece)-> apply(piece, scope))
       fn.apply(scope, args)
     else
-      throw "unexpected token #{expression}"
+      throw "unexpected expression #{expression}"
+
 
 # helper to run within Native scope
 run = (code) ->

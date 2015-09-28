@@ -45,16 +45,25 @@
         (trace left "->" right)
         (hanoi (- remain 1) middle left right)
       ))))
-  (hanoi 10 "left" "middle" "right")
+  ; (hanoi 10 "left" "middle" "right")
 
   ;; core functions
-  (cond
-    ((> 1 1) (trace "failed!"))
-    ((> 1 2) (trace "failed!"))
-    ((> 2 1) (trace "success!"))
-  )
+  (trace  (cond
+    ((> 1 1) (+ 1 1))
+    ((> 1 2) (+ 2 1))
+    ((> 2 1) (+ 3 1))
+  ))
 
+  (def mapr (lambda (fn lst collector)
+    (cond
+      ((nil? lst) collector)
+      ((eq 1 1) (mapr fn (cdr lst) (cons (fn (car lst)) collector))))))
 
+  (def map (lambda (fn lst)
+    (mapr fn lst nil)))
 
+  (trace (map
+    (lambda (x) (+ 100 x))
+    (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil)))))))
 
 )
