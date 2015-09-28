@@ -48,6 +48,7 @@ Native =
     (actArgs...)->
       _scope = Object.create(@)
       defArgs.forEach((name, idx)-> _scope[name] = apply(actArgs[idx], _scope))
+      #FIXME lambda body should be evaluated as do
       apply(body, _scope))
   'cons': (head, ary) -> list([head, ary])
   'car': (list)->
