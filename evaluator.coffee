@@ -31,7 +31,6 @@ list = (list) ->
   (list.__list__ = true) and list
 
 Native =
-  trace: (names...)-> console.log(names)
   concat: (str, str2)-> str + str2
   '>': (a, b)-> a > b
   '<': (a, b)-> a < b

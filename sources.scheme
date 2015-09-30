@@ -47,21 +47,22 @@
       ))))
   ; (hanoi 10 "left" "middle" "right")
 
-  ;; core functions
+  ;; cond test code functions
   (trace  (cond
     ((> 1 1) (+ 1 1))
     ((> 1 2) (+ 2 1))
     ((> 2 1) (+ 3 1))
   ))
-  
+
+  ;; map   
   (def mapr (lambda (fn lst collector)
     (cond
       ((nil? lst) collector)
       ((eq 1 1) (mapr fn (cdr lst) (cons (fn (car lst)) collector))))))
-
   (def map (lambda (fn lst)
     (mapr fn lst nil)))
 
+  ;; testcase
   (trace (map
     (lambda (x) (+ 100 x))
     (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil)))))))
@@ -73,4 +74,23 @@
       )
     (cons 1 (cons 2 (cons 3 (cons 4 nil))))
    ))
+
+   (trace "filter-begin")
+
+  (def filterr (lambda (fn lst collector)
+    (trace lst)
+    (if (nil? lst) 
+        collector 
+        (if (fn (car lst)) 
+         (filterr fn (cdr lst) (cons (car lst) collector))
+         (filterr fn (cdr lst) collector)
+         ))
+  ))
+
+  (def filter (lambda (fn lst)
+    (filterr fn lst nil)
+  ))
+
+  (def l (cons 30 (cons 29 (cons 31 (cons 28 nil)))))
+  (trace (filter (lambda (x) (> x 30)) l))
 )
