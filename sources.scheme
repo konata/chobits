@@ -1,9 +1,10 @@
 (do
-  ; normal function defination
-(def max
+  ;; normal function defination
+  (def max
     (lambda (x y)
       (if (> x y) x y)
     ))
+
   (trace
     (max 100 200))
 
@@ -45,7 +46,7 @@
         (trace left "->" right)
         (hanoi (- remain 1) middle left right)
       ))))
-  ; (hanoi 10 "left" "middle" "right")
+  (hanoi 10 "left" "middle" "right")
 
   ;; cond test code functions
   (trace  (cond
@@ -74,8 +75,6 @@
       )
     (cons 1 (cons 2 (cons 3 (cons 4 nil))))
    ))
-
-   (trace "filter-begin")
 
   (def filterr (lambda (fn lst collector)
     (trace lst)

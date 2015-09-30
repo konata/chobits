@@ -4,5 +4,3 @@
 source = os.readFile('./sources.scheme').toString()
 symbols = tokenize(source)
 run(symbols)
-
-
